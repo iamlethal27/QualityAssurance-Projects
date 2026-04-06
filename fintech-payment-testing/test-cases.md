@@ -1,4 +1,4 @@
-# 📋 Test Cases — Fintech Payment Gateway
+# 📋 Test Cases - Fintech Payment Gateway
 
 **Project:** Payment Gateway Testing  
 **Tester:** Uzair Akhtar  
@@ -8,7 +8,7 @@
 
 ---
 
-## Module 1 — Successful Transaction (Happy Path)
+## Module 1 - Successful Transaction (Happy Path)
 
 | TC ID | Title | Precondition | Steps | Expected Result | Severity | Result |
 |-------|-------|-------------|-------|-----------------|----------|--------|
@@ -23,7 +23,7 @@
 
 ---
 
-## Module 2 — Card Validation
+## Module 2 - Card Validation
 
 | TC ID | Title | Precondition | Steps | Expected Result | Severity | Result |
 |-------|-------|-------------|-------|-----------------|----------|--------|
@@ -36,13 +36,13 @@
 | PG-015 | Payment with empty card number field | N/A | Leave card number field blank and submit | Form validation error: "Card number is required." Transaction not submitted. | High | ✅ Pass |
 | PG-016 | Payment with empty CVV field | N/A | Leave CVV field blank and submit | Form validation error: "CVV is required." | High | ✅ Pass |
 | PG-017 | Payment with unsupported card type | N/A | Enter an American Express card number | Error: "This card type is not supported." Transaction not processed. | Medium | ✅ Pass |
-| PG-018 | Card number with spaces | N/A | Enter card number with spaces between groups (e.g. "4111 1111 1111 1111") | System accepts formatted input OR shows clear error — must not crash | Medium | ✅ Pass |
+| PG-018 | Card number with spaces | N/A | Enter card number with spaces between groups (e.g. "4111 1111 1111 1111") | System accepts formatted input OR shows clear error - must not crash | Medium | ✅ Pass |
 | PG-019 | Payment with all zeros card number | N/A | Enter "0000000000000000" as card number | Rejected as invalid. No transaction initiated. | High | ✅ Pass |
 | PG-020 | Verify card number is masked in response | Any transaction | Submit transaction and inspect API response payload | Card number should show only last 4 digits (e.g. ****1111). Full number never exposed. | Critical | ❌ Fail |
 
 ---
 
-## Module 3 — Insufficient Funds
+## Module 3 - Insufficient Funds
 
 | TC ID | Title | Precondition | Steps | Expected Result | Severity | Result |
 |-------|-------|-------------|-------|-----------------|----------|--------|
@@ -54,7 +54,7 @@
 
 ---
 
-## Module 4 — Duplicate Transaction Detection
+## Module 4 - Duplicate Transaction Detection
 
 | TC ID | Title | Precondition | Steps | Expected Result | Severity | Result |
 |-------|-------|-------------|-------|-----------------|----------|--------|
@@ -65,20 +65,20 @@
 
 ---
 
-## Module 5 — Timeout and Network Failure
+## Module 5 - Timeout and Network Failure
 
 | TC ID | Title | Precondition | Steps | Expected Result | Severity | Result |
 |-------|-------|-------------|-------|-----------------|----------|--------|
-| PG-030 | Transaction in progress — network drops | Transaction submitted | Simulate network disconnect mid-transaction | System handles gracefully. Either transaction completes and customer is notified, OR transaction is rolled back — funds are NOT deducted if transaction did not complete | Critical | ✅ Pass |
+| PG-030 | Transaction in progress - network drops | Transaction submitted | Simulate network disconnect mid-transaction | System handles gracefully. Either transaction completes and customer is notified, OR transaction is rolled back - funds are NOT deducted if transaction did not complete | Critical | ✅ Pass |
 | PG-031 | No double deduction after network timeout | Account has PKR 5000 | Submit transaction → cause timeout → check balance | If transaction timed out, balance should remain unchanged. | Critical | ✅ Pass |
 | PG-032 | User sees clear message on timeout | Any timeout scenario | Trigger a timeout | User sees message such as "Transaction could not be completed. Please try again." Not a blank screen or crash. | High | ✅ Pass |
 | PG-033 | System recovers after timeout and accepts new transaction | After a timeout | Trigger timeout → wait → attempt new valid transaction | New transaction processes successfully. System is not stuck. | High | ✅ Pass |
 | PG-034 | Timeout response is returned within defined SLA | Any transaction | Simulate a slow/unresponsive downstream system | System returns a timeout response within 30 seconds. Does not hang indefinitely. | Medium | ✅ Pass |
-| PG-035 | Transaction status is clear after timeout | Any timeout | Trigger timeout → open transaction history | Transaction status shows "Pending" or "Failed" — not stuck as "Processing" | High | ✅ Pass |
+| PG-035 | Transaction status is clear after timeout | Any timeout | Trigger timeout → open transaction history | Transaction status shows "Pending" or "Failed" - not stuck as "Processing" | High | ✅ Pass |
 
 ---
 
-## Module 6 — Refund and Reversal Flow
+## Module 6 - Refund and Reversal Flow
 
 | TC ID | Title | Precondition | Steps | Expected Result | Severity | Result |
 |-------|-------|-------------|-------|-----------------|----------|--------|
@@ -93,7 +93,7 @@
 
 ---
 
-## Module 7 — Security Testing (Basic)
+## Module 7 - Security Testing (Basic)
 
 | TC ID | Title | Precondition | Steps | Expected Result | Severity | Result |
 |-------|-------|-------------|-------|-----------------|----------|--------|
@@ -112,5 +112,5 @@
 | Bug ID | TC | Title | Severity | Status |
 |--------|-----|-------|----------|--------|
 | BUG-001 | PG-020 | Full card number exposed in API response body | Critical | Open |
-| BUG-002 | PG-026 | Duplicate transaction within 60 seconds is NOT blocked — customer charged twice | Critical | Open |
+| BUG-002 | PG-026 | Duplicate transaction within 60 seconds is NOT blocked - customer charged twice | Critical | Open |
 | BUG-003 | PG-044 | Card PAN returned unmasked in refund confirmation response | Critical | Open |
