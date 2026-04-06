@@ -1,0 +1,325 @@
+{
+  "info": {
+    "_postman_id": "uzair-akhtar-api-testing-collection",
+    "name": "ReqRes API Testing — Uzair Akhtar QA Portfolio",
+    "description": "A complete Postman collection testing all four HTTP methods (GET, POST, PUT, DELETE) against the ReqRes public REST API. Each request includes automated test scripts asserting status codes, response times, and JSON body structure. Built as part of a QA portfolio to demonstrate structured API testing methodology.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Module 1 — GET Requests",
+      "item": [
+        {
+          "name": "TC-001 Get List of Users Page 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://reqres.in/api/users?page=1",
+              "protocol": "https",
+              "host": ["reqres", "in"],
+              "path": ["api", "users"],
+              "query": [{ "key": "page", "value": "1" }]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-001: Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('TC-001: Response contains data array', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data).to.be.an('array');",
+                  "});",
+                  "pm.test('TC-001: Response time is under 3000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});",
+                  "pm.test('TC-001: Content-Type is application/json', function () {",
+                  "    pm.response.to.have.header('Content-Type');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-003 Get Single Valid User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://reqres.in/api/users/2",
+              "protocol": "https",
+              "host": ["reqres", "in"],
+              "path": ["api", "users", "2"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-003: Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('TC-003: User ID is present and correct', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.id).to.eql(2);",
+                  "});",
+                  "pm.test('TC-003: Email field is present', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.email).to.not.be.null;",
+                  "});",
+                  "pm.test('TC-003: First name and last name are present', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.data.first_name).to.be.a('string');",
+                  "    pm.expect(jsonData.data.last_name).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-004 Get Non-Existent User — Expect 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://reqres.in/api/users/999",
+              "protocol": "https",
+              "host": ["reqres", "in"],
+              "path": ["api", "users", "999"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-004: Status code is 404 for non-existent user', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "pm.test('TC-004: Response body is empty — no data leaked', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(Object.keys(jsonData).length).to.eql(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Module 2 — POST Requests",
+      "item": [
+        {
+          "name": "TC-007 Create New User — Expect 201",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Uzair Akhtar\",\n    \"job\": \"QA Engineer\"\n}"
+            },
+            "url": {
+              "raw": "https://reqres.in/api/users",
+              "protocol": "https",
+              "host": ["reqres", "in"],
+              "path": ["api", "users"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-007: Status code is 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test('TC-007: Response contains generated ID', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.not.be.null;",
+                  "});",
+                  "pm.test('TC-007: Response contains createdAt timestamp', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.createdAt).to.not.be.null;",
+                  "});",
+                  "pm.test('TC-007: Name matches what was sent', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.name).to.eql('Uzair Akhtar');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-010 Register User with Valid Credentials",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"eve.holt@reqres.in\",\n    \"password\": \"pistol\"\n}"
+            },
+            "url": {
+              "raw": "https://reqres.in/api/register",
+              "protocol": "https",
+              "host": ["reqres", "in"],
+              "path": ["api", "register"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-010: Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('TC-010: Token is returned in response', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.token).to.be.a('string');",
+                  "    pm.expect(jsonData.token.length).to.be.above(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "TC-011 Register Without Password — Expect 400",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"eve.holt@reqres.in\"\n}"
+            },
+            "url": {
+              "raw": "https://reqres.in/api/register",
+              "protocol": "https",
+              "host": ["reqres", "in"],
+              "path": ["api", "register"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-011: Status code is 400 when password is missing', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test('TC-011: Error message is returned', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.error).to.include('Missing password');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Module 3 — PUT Requests",
+      "item": [
+        {
+          "name": "TC-013 Update User Name and Job",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Uzair Akhtar\",\n    \"job\": \"Senior QA Engineer\"\n}"
+            },
+            "url": {
+              "raw": "https://reqres.in/api/users/2",
+              "protocol": "https",
+              "host": ["reqres", "in"],
+              "path": ["api", "users", "2"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-013: Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('TC-013: Name was updated correctly', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.name).to.eql('Uzair Akhtar');",
+                  "});",
+                  "pm.test('TC-013: updatedAt timestamp is present', function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.updatedAt).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Module 4 — DELETE Requests",
+      "item": [
+        {
+          "name": "TC-016 Delete a User — Expect 204",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://reqres.in/api/users/2",
+              "protocol": "https",
+              "host": ["reqres", "in"],
+              "path": ["api", "users", "2"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('TC-016: Status code is 204 No Content', function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "pm.test('TC-016: Response body is empty after deletion', function () {",
+                  "    pm.expect(pm.response.text()).to.have.lengthOf(0);",
+                  "});",
+                  "pm.test('TC-016: Response time is under 3000ms', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
